@@ -4,6 +4,17 @@ import openpyxl
 workbook = openpyxl.load_workbook('Scheduled Hours & Wages.xlsx')
 worksheet = workbook.active
 
+
+import openpyxl
+from browser import document, html
+
+def processExcelFile(fileContents):
+    # Process the file contents here
+    # For example, you can use the openpyxl library to read the Excel file
+    workbook = openpyxl.load_workbook(fileContents)
+    worksheet = workbook.active
+
+  
 employee_names = []
 hours_worked = []
 
@@ -48,3 +59,50 @@ for i in range(len(employee_names)):
         report += f"{employee_names[i].split(',')[1].strip()} {hours_to_report} Hrs\n"
 
 print(report)
+
+
+    # Create HTML elements to display the report
+output_div = document["output"]
+output_div.innerHTML = ""  # Clear previous content
+
+# Add the pay period
+pay_period_heading = html.H4(f"Pay Period: {pay_period}")
+output_div <= pay_period_heading
+
+# Add the master chart
+master_chart_heading = html.H4("Master Chart")
+output_div <= master_chart_heading
+
+table = html.TABLE()
+header_row = html.TR()
+header_row <= html.TH("Employee Name")
+header_row <= html.TH("Hours Worked")
+header_row <= html.TH("Hours on SIN")
+header_row <= html.TH("Hours on Cash")
+header_row <= html.TH("Cash Payout")
+table <= header_row
+
+for i in range(len(employee_names)):
+    row = html.TR()
+    row <= html.TD(employee_names[i])
+    row <= html.TD(f"{hours_worked[i]:.2f}")
+    row <= html.TD(f"{min(hours_worked[i], allowed_hours_on_sin[i]):.2f}")
+    row <= html.TD(f"{max(0, hours_worked[i] - allowed_hours_on_sin[i]):.2f}")
+    row <= html.TD(f"${hours_on_cash * 12:.2f}")
+    table <= row
+
+output_div <= table
+
+# Add the total cash payout
+total_cash_payout_heading = html.H4(f"Total Cash Payout: ${total_cash_payout:.2f}")
+output_div <= total_cash_payout_heading
+
+# Add the report
+report_heading = html.H4("Report")
+output_div <= report_heading
+output_div <= html.PRE(report)
+
+# Expose the processExcelFile function to JavaScript
+window.pyApp = {
+    'processExcelFile': processExcelFile
+}
