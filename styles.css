@@ -1,0 +1,12 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 20px;
+  }
+  
+  #output {
+    margin-top: 20px;
+    white-space: pre-wrap;
+    text-align: left;
+  }
+  
